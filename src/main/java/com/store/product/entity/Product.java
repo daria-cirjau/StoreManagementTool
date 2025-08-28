@@ -1,6 +1,7 @@
 package com.store.product.entity;
 
 
+import com.store.category.entity.Category;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,8 +31,9 @@ public class Product {
     private Date createdAt;
     @Column(nullable = false)
     private Date updatedAt;
-    @Column
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @PrePersist
     public void onCreate() {

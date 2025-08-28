@@ -1,5 +1,6 @@
 package com.store.product.entity.dto;
 
+import com.store.category.entity.Category;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -17,7 +18,7 @@ public record ProductDTO(
         String currency,
         @Min(value = 0, message = "Quantity must be greater or equal to 0")
         Integer quantity,
-        String category,
+        Category category,
         UUID id,
         Date createdAt,
         Date updatedAt

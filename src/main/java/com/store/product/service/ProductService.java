@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+import com.store.category.entity.Category;
+import com.store.category.repository.CategoryRepository;
 import com.store.product.entity.Product;
 import com.store.product.entity.dto.ProductDTO;
 import com.store.product.entity.mapper.ProductMapper;
@@ -21,11 +23,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final CategoryRepository categoryRepository;
     private final ObjectMapper objectMapper;
 
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, ObjectMapper objectMapper) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, CategoryRepository categoryRepository, ObjectMapper objectMapper) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
+        this.categoryRepository = categoryRepository;
         this.objectMapper = objectMapper;
     }
 
@@ -85,5 +89,27 @@ public class ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id " + id + " not found"));
         productRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List<ProductDTO> getProductsByCategoryName(String categoryName) {
+        Category category = categoryRepository.findDistinctFirstByName(categoryName)
+                .orElseThrow(() -> new EntityNotFoundException("Category " + categoryName + " not found"));
+
+        return productRepository.findByCategory(category)
+                .stream()
+                .map(productMapper::toDto)
+                .toList();
+    }
+
+    @Transactional
+    public List<ProductDTO> getProductsByCategoryId(UUID categoryId) {
+        categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException("Category with id " + categoryId + " not found"));
+
+        return productRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(productMapper::toDto)
+                .toList();
     }
 }

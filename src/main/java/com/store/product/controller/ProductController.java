@@ -42,4 +42,12 @@ public class ProductController {
         productService.deleteProductById(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
+    @GetMapping(params = "categoryName")
+    public ResponseEntity<List<ProductDTO>> getByCategoryName(@RequestParam String categoryName) {
+        return ResponseEntity.ok(productService.getProductsByCategoryName(categoryName));
+    }
+    @GetMapping(params = "categoryId")
+    public ResponseEntity<List<ProductDTO>> getByCategoryId(@RequestParam UUID categoryId) {
+        return ResponseEntity.ok(productService.getProductsByCategoryId(categoryId));
+    }
 }

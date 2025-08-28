@@ -6,6 +6,7 @@ import com.store.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,9 +20,9 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> createProduct(@RequestBody ProductDTO product) {
-        productService.createProduct(product);
-        return ResponseEntity.ok("Product created successfully");
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product) {
+        ProductDTO savedObject = productService.createProduct(product);
+        return ResponseEntity.created(URI.create("/products/" + savedObject.id())).body(savedObject);
     }
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable UUID id) {
@@ -31,7 +32,7 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
-    @PatchMapping("/{id}")
+    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
     public ResponseEntity<String> patchProduct(@PathVariable UUID id, @RequestBody JsonPatch patch) {
         productService.patchProduct(id, patch);
         return ResponseEntity.ok("Product updated successfully");

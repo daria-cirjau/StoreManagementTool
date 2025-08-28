@@ -30,7 +30,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void createProduct(ProductDTO productDTO) {
+    public ProductDTO createProduct(ProductDTO productDTO) {
         if (productDTO == null) {
             throw new IllegalArgumentException("Product payload is required");
         }
@@ -44,6 +44,8 @@ public class ProductService {
                 .build();
 
         productRepository.save(product);
+
+        return productMapper.toDto(product);
     }
 
     public ProductDTO getProduct(UUID id) {
@@ -65,7 +67,8 @@ public class ProductService {
 
             productRepository.save(product);
         } catch (JsonPatchException | JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new org.springframework.web.server.ResponseStatusException(
+                    org.springframework.http.HttpStatus.BAD_REQUEST, "Invalid JSON Patch: " + e.getMessage(), e);
         }
     }
 

@@ -1,8 +1,8 @@
-package com.storemanagementtool.product.controller;
+package com.store.product.controller;
 
 import com.github.fge.jsonpatch.JsonPatch;
-import com.storemanagementtool.product.entity.dto.ProductDTO;
-import com.storemanagementtool.product.service.ProductService;
+import com.store.product.entity.dto.ProductDTO;
+import com.store.product.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

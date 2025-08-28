@@ -1,14 +1,14 @@
-package com.storemanagementtool.product.service;
+package com.store.product.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
-import com.storemanagementtool.product.entity.Product;
-import com.storemanagementtool.product.entity.dto.ProductDTO;
-import com.storemanagementtool.product.entity.mapper.ProductMapper;
-import com.storemanagementtool.product.repository.ProductRepository;
+import com.store.product.entity.Product;
+import com.store.product.entity.dto.ProductDTO;
+import com.store.product.entity.mapper.ProductMapper;
+import com.store.product.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

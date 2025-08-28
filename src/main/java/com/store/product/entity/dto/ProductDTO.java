@@ -1,4 +1,4 @@
-package com.storemanagementtool.product.entity.dto;
+package com.store.product.entity.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

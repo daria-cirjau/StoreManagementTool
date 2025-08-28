@@ -1,4 +1,4 @@
-package com.storemanagementtool.product.entity;
+package com.store.product.entity;
 
 
 import jakarta.persistence.*;

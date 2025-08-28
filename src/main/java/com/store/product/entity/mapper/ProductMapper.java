@@ -1,7 +1,7 @@
-package com.storemanagementtool.product.entity.mapper;
+package com.store.product.entity.mapper;
 
-import com.storemanagementtool.product.entity.Product;
-import com.storemanagementtool.product.entity.dto.ProductDTO;
+import com.store.product.entity.Product;
+import com.store.product.entity.dto.ProductDTO;
 import org.springframework.stereotype.Component;
 
 @Component

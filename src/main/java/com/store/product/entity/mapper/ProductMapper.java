@@ -42,9 +42,6 @@ public class ProductMapper {
         if (dto.name() != null) {
             entity.setName(dto.name());
         }
-        if (dto.price() != null) {
-            entity.setPrice(dto.price());
-        }
         if (dto.currency() != null) {
             entity.setCurrency(dto.currency());
         }
@@ -53,6 +50,9 @@ public class ProductMapper {
         }
         if (dto.category() != null) {
             entity.setCategory(dto.category());
+        }
+        if (dto.price() != null && !dto.price().equals(entity.getPrice())) {
+            throw new IllegalArgumentException("Price update not permitted.");
         }
     }
 

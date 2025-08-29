@@ -86,7 +86,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProductById(UUID id) {
-        Product product = productRepository.findById(id)
+        productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product with id " + id + " not found"));
         productRepository.deleteById(id);
     }

@@ -49,7 +49,7 @@ public class PriceService {
             throw new DataIntegrityViolationException("Product " + productId + " price could not be updated.");
         }
 
-        PriceHistory history = priceMapper.toEntity(dto, oldPrice);
+        PriceHistory history = priceMapper.toEntity(dto, oldPrice, productId);
         priceRepository.save(history);
     }
 

@@ -2,24 +2,35 @@ package com.store.price.entity.mapper;
 
 import com.store.price.entity.PriceHistory;
 import com.store.price.entity.dto.PriceHistoryDTO;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class PriceMapper {
 
-    public PriceHistory toEntity(PriceHistoryDTO dto, Long oldPrice) {
-        if (dto == null) return null;
+    public PriceHistory toEntity(PriceHistoryDTO dto, Long oldPrice, UUID productId) {
+        if (dto == null) {
+            return null;
+        }
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = auth.getName();
 
         return PriceHistory.builder()
                 .id(dto.id())
-                .productId(dto.productId())
+                .productId(productId)
                 .oldPrice(oldPrice)
                 .newPrice(dto.newPrice())
-                .changedBy(dto.changedBy())
+                .changedBy(currentUser)
                 .reason(dto.reason())
-                .changedAt(dto.changedAt())
+                .changedAt(new Date())
                 .build();
     }
+
 
     public PriceHistoryDTO toDto(PriceHistory entity) {
         if (entity == null) return null;

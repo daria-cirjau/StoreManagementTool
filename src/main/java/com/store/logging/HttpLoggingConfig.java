@@ -11,7 +11,7 @@ public class HttpLoggingConfig {
         CommonsRequestLoggingFilter f = new CommonsRequestLoggingFilter();
         f.setIncludeClientInfo(true);
         f.setIncludeQueryString(true);
-        f.setIncludePayload(true);
+        f.setIncludePayload(false);
         f.setIncludeHeaders(true);
         f.setMaxPayloadLength(10_000);
         return f;

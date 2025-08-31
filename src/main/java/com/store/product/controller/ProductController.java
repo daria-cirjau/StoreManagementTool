@@ -3,6 +3,7 @@ package com.store.product.controller;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.store.product.entity.dto.ProductDTO;
 import com.store.product.service.ProductService;
+import com.store.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,34 +21,46 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product) {
+    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductDTO product) {
         ProductDTO savedObject = productService.createProduct(product);
-        return ResponseEntity.created(URI.create("/products/" + savedObject.id())).body(savedObject);
+        return ResponseEntity
+                .created(URI.create("/products/" + savedObject.id()))
+                .body(ApiResponse.of("Product created successfully", 201, savedObject));
     }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable UUID id) {
-        return ResponseEntity.ok(productService.getProduct(id));
+    public ResponseEntity<ApiResponse> getProduct(@PathVariable UUID id) {
+        ProductDTO dto = productService.getProduct(id);
+        return ResponseEntity.ok(ApiResponse.ofData(dto, 200));
     }
+
     @GetMapping("/all")
-    public ResponseEntity<List<ProductDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<ApiResponse> getAllProducts() {
+        List<ProductDTO> list = productService.getAllProducts();
+        return ResponseEntity.ok(ApiResponse.ofData(list, 200));
     }
+
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<String> patchProduct(@PathVariable UUID id, @RequestBody JsonPatch patch) {
+    public ResponseEntity<ApiResponse> patchProduct(@PathVariable UUID id, @RequestBody JsonPatch patch) {
         productService.patchProduct(id, patch);
-        return ResponseEntity.ok("Product updated successfully");
+        return ResponseEntity.ok(ApiResponse.ofMessage("Product updated successfully", 200));
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable UUID id) {
         productService.deleteProductById(id);
-        return ResponseEntity.ok("Product deleted successfully");
+        return ResponseEntity.ok(ApiResponse.ofMessage("Product deleted successfully", 200));
     }
+
     @GetMapping(params = "categoryName")
-    public ResponseEntity<List<ProductDTO>> getByCategoryName(@RequestParam String categoryName) {
-        return ResponseEntity.ok(productService.getProductsByCategoryName(categoryName));
+    public ResponseEntity<ApiResponse> getByCategoryName(@RequestParam String categoryName) {
+        List<ProductDTO> list = productService.getProductsByCategoryName(categoryName);
+        return ResponseEntity.ok(ApiResponse.ofData(list, 200));
     }
+
     @GetMapping(params = "categoryId")
-    public ResponseEntity<List<ProductDTO>> getByCategoryId(@RequestParam UUID categoryId) {
-        return ResponseEntity.ok(productService.getProductsByCategoryId(categoryId));
+    public ResponseEntity<ApiResponse> getByCategoryId(@RequestParam UUID categoryId) {
+        List<ProductDTO> list = productService.getProductsByCategoryId(categoryId);
+        return ResponseEntity.ok(ApiResponse.ofData(list, 200));
     }
 }

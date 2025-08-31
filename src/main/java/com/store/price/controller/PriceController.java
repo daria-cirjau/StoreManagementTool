@@ -2,6 +2,7 @@ package com.store.price.controller;
 
 import com.store.price.entity.dto.PriceHistoryDTO;
 import com.store.price.service.PriceService;
+import com.store.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +19,14 @@ public class PriceController {
     }
 
     @PatchMapping(path = "/product/{id}")
-    public ResponseEntity<String> updatePrice(@PathVariable UUID id, @RequestBody PriceHistoryDTO priceHistoryDTO) {
+    public ResponseEntity<ApiResponse> updatePrice(@PathVariable UUID id, @RequestBody PriceHistoryDTO priceHistoryDTO) {
         priceService.updatePrice(id, priceHistoryDTO);
-        return ResponseEntity.ok("Product price updated successfully");
+        return ResponseEntity.ok(ApiResponse.ofMessage("Product price updated successfully", 200));
     }
 
     @GetMapping(path = "/product/{id}/history")
-    public ResponseEntity<List<PriceHistoryDTO>> getPriceHistory(@PathVariable UUID id) {
-        return ResponseEntity.ok(priceService.getPriceHistory(id));
+    public ResponseEntity<ApiResponse> getPriceHistory(@PathVariable UUID id) {
+        List<PriceHistoryDTO> history = priceService.getPriceHistory(id);
+        return ResponseEntity.ok(ApiResponse.ofData(history, 200));
     }
-
 }

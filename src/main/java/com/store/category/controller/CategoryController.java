@@ -3,6 +3,7 @@ package com.store.category.controller;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.store.category.entity.dto.CategoryDTO;
 import com.store.category.service.CategoryService;
+import com.store.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,36 +19,40 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService) { this.categoryService = categoryService; }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO dto) {
+    public ResponseEntity<ApiResponse> createCategory(@RequestBody CategoryDTO dto) {
         CategoryDTO savedObject = categoryService.createCategory(dto);
-        return ResponseEntity.created(URI.create("/categories/" + savedObject.id())).body(savedObject);
+        return ResponseEntity
+                .created(URI.create("/categories/" + savedObject.id()))
+                .body(ApiResponse.of("Category created successfully", 201, savedObject));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategory(@PathVariable UUID id) {
-        return ResponseEntity.ok(categoryService.getCategory(id));
+    public ResponseEntity<ApiResponse> getCategory(@PathVariable UUID id) {
+        CategoryDTO dto = categoryService.getCategory(id);
+        return ResponseEntity.ok(ApiResponse.ofData(dto, 200));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<ApiResponse> getAllCategories() {
+        List<CategoryDTO> list = categoryService.getAllCategories();
+        return ResponseEntity.ok(ApiResponse.ofData(list, 200));
     }
 
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public ResponseEntity<String> patchCategory(@PathVariable UUID id, @RequestBody JsonPatch patch) {
+    public ResponseEntity<ApiResponse> patchCategory(@PathVariable UUID id, @RequestBody JsonPatch patch) {
         categoryService.patchCategory(id, patch);
-        return ResponseEntity.ok("Category updated successfully");
+        return ResponseEntity.ok(ApiResponse.ofMessage("Category updated successfully", 200));
     }
 
     @PatchMapping("/{id}/inactivate")
-    public ResponseEntity<String> inactivateCategory(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse> inactivateCategory(@PathVariable UUID id) {
         categoryService.inactivateCategory(id);
-        return ResponseEntity.ok("Category was set to inactive");
+        return ResponseEntity.ok(ApiResponse.ofMessage("Category was set to inactive", 200));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable UUID id) {
+    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategoryById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ofMessage("Category deleted successfully", 200));
     }
 }

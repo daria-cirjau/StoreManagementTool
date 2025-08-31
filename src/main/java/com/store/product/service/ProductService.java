@@ -39,17 +39,12 @@ public class ProductService {
             throw new IllegalArgumentException("Product payload is required");
         }
         Product product = productMapper.toEntity(productDTO);
-        product = Product.builder()
-                .name(product.getName())
-                .price(product.getPrice())
-                .currency(product.getCurrency())
-                .quantity(product.getQuantity())
-                .category(product.getCategory())
-                .build();
 
-        productRepository.save(product);
+        Category managedCategory = resolveCategory(product.getCategory());
+        product.setCategory(managedCategory);
 
-        return productMapper.toDto(product);
+        Product saved = productRepository.save(product);
+        return productMapper.toDto(saved);
     }
 
     public ProductDTO getProduct(UUID id) {
@@ -67,7 +62,11 @@ public class ProductService {
         try {
             JsonNode patchedNode = patch.apply(productJsonNode);
             productDTO = objectMapper.treeToValue(patchedNode, ProductDTO.class);
-            productMapper.applyPatchToEntity(productDTO,product);
+            productMapper.applyPatchToEntity(productDTO, product);
+            if (product.getCategory() != null) {
+                Category managedCategory = resolveCategory(product.getCategory());
+                product.setCategory(managedCategory);
+            }
 
             productRepository.save(product);
         } catch (JsonPatchException | JsonProcessingException e) {
@@ -111,5 +110,30 @@ public class ProductService {
                 .stream()
                 .map(productMapper::toDto)
                 .toList();
+    }
+
+    private Category resolveCategory(Category category) {
+        if (category == null) {
+            throw new IllegalArgumentException("Category is required");
+        }
+
+        if (category.getId() != null) {
+            return categoryRepository.findById(category.getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Category with id " + category.getId() + " not found"));
+        }
+
+        if (category.getName() != null && !category.getName().isBlank()) {
+            return categoryRepository.findDistinctFirstByName(category.getName())
+                    .orElseGet(() -> {
+                        Category c = Category.builder()
+                                .name(category.getName())
+                                .description(category.getDescription())
+                                .isActive(Boolean.TRUE)
+                                .build();
+                        return categoryRepository.save(c);
+                    });
+        }
+
+        throw new IllegalArgumentException("Category must provide either id or name");
     }
 }

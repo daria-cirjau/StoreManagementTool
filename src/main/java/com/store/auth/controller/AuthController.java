@@ -2,8 +2,10 @@ package com.store.auth.controller;
 
 import com.store.auth.entity.Role;
 import com.store.auth.entity.User;
+import com.store.auth.entity.dto.UserDTO;
 import com.store.auth.service.AuthService;
 import com.store.response.ApiResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +22,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> register(@RequestParam String username, @RequestParam String password) {
-        authService.register(username, password);
-        return ResponseEntity.ok(ApiResponse.ofMessage("User registered: " + username, 200));
+    public ResponseEntity<ApiResponse> register(@Valid @RequestBody UserDTO dto) {
+        authService.register(dto.username(), dto.password());
+        return ResponseEntity.ok(ApiResponse.ofMessage("User registered: " + dto.username(), 200));
     }
 
     @PostMapping("/grantRole")

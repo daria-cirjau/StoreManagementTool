@@ -99,7 +99,7 @@ Spring Boot REST API project for managing users, products, categories, and price
 
 ## 📂 Postman Collection
 
-Import: [Store Management Tool Postman Collection](https://github.com/user-attachments/files/22067958/Store.Management.Tool.postman_collection.json)
+Import: [Store Management Tool Postman Collection](https://github.com/user-attachments/files/22074436/Store.Management.Tool.postman_collection.json)
 
 **Environment variables included:**
 
@@ -111,5 +111,14 @@ Import: [Store Management Tool Postman Collection](https://github.com/user-attac
 Postman scripts automatically set `{{productId}}` and `{{categoryId}}` when you create resources.
 
 ---
+## 🔮 Future Development
 
-
+- Break down app into microservices:
+  - Auth Service
+  - Product Service
+  - Category Service
+  - Price Service
+- Containerization with Docker and orchestration with Kubernetes
+- Migrate authentication to JWT instead of Basic Auth
+- Enhance logging and monitoring 
+- Add unit and integration tests 
